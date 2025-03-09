@@ -24,8 +24,8 @@ export default function ExpenseList({ expenses }: { expenses: Paginate<Expense> 
             <Head title="Expense List" />
             <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
                 <div className="flex items-center justify-between">
-                    <h1 className="text-2xl font-bold">Expense List</h1>
-                    <Button onClick={() => router.visit('/expenses/new')}>
+                    <h1 className="text-xl font-medium">Expense List</h1>
+                    <Button onClick={() => router.visit('/expenses/new')} className="cursor-pointer">
                         <Plus />
                         New
                     </Button>
@@ -91,7 +91,7 @@ export default function ExpenseList({ expenses }: { expenses: Paginate<Expense> 
                         {expenses.links
                             .filter((link) => !link.label.includes('Previous') && !link.label.includes('Next'))
                             .map((link) => (
-                                <PaginationItem>
+                                <PaginationItem key={link.label}>
                                     <PaginationLink isActive={link.active} href={link.url}>
                                         {link.label}
                                     </PaginationLink>

@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Expense;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 
 class ExpenseController extends Controller
@@ -23,7 +25,9 @@ class ExpenseController extends Controller
      */
     public function create()
     {
-        return Inertia::render('expense/new-expense');
+        $user_id = Auth::id();
+        $categories = Category::all();
+        return Inertia::render('expense/new-expense', ['user_id' => $user_id, 'categories' => $categories]);
     }
 
     /**
@@ -31,16 +35,23 @@ class ExpenseController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'user_id' => 'required|numeric',
+            'category_id' => 'required|numeric',
+            'description' => 'required|string',
+            'amount' => 'required|decimal:2',
+            'expense_at' => 'required|' . Rule::date()->format('Y-m-d'),
+        ]);
+
+        Expense::create(attributes: $validated);
+
+        return to_route('expenses.index');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Expense $expense)
-    {
-        //
-    }
+    public function show(Expense $expense) {}
 
     /**
      * Show the form for editing the specified resource.

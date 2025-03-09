@@ -31,6 +31,7 @@ class Expense extends Model
     protected function casts(): array
     {
         return [
+            'expense_at' => 'datetime:Y-m-d',
             'created_at' => 'datetime:Y-m-d H:i A',
             'updated_at' => 'datetime:Y-m-d H:i A'
         ];

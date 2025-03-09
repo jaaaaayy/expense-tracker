@@ -28,7 +28,7 @@ export default function AuthSplitLayout({ children, title, description }: PropsW
                     </div>
                 )}
             </div>
-            <div className="w-full lg:p-8">
+            <div className="w-full py-8">
                 <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
                     <Link href={route('home')} className="relative z-20 flex items-center justify-center text-lg font-medium lg:hidden">
                         <AppLogoIcon className="mr-2 h-10 text-black sm:h-12" />
