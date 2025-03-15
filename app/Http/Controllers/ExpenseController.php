@@ -39,13 +39,13 @@ class ExpenseController extends Controller
             'user_id' => 'required|numeric',
             'category_id' => 'required|numeric',
             'description' => 'required|string',
-            'amount' => 'required|decimal:2',
+            'amount' => 'required|numeric',
             'expense_at' => 'required|' . Rule::date()->format('Y-m-d'),
         ]);
 
         Expense::create(attributes: $validated);
 
-        return to_route('expenses.index');
+        return redirect()->back()->with('message', 'Expense created successfully!');
     }
 
     /**
@@ -58,7 +58,13 @@ class ExpenseController extends Controller
      */
     public function edit(Expense $expense)
     {
-        //
+        $user_id = Auth::id();
+        $categories = Category::all();
+        return Inertia::render('expense/update-expense', [
+            'user_id' => $user_id,
+            'categories' => $categories,
+            'expense' => $expense
+        ]);
     }
 
     /**
@@ -66,7 +72,17 @@ class ExpenseController extends Controller
      */
     public function update(Request $request, Expense $expense)
     {
-        //
+        $validated = $request->validate([
+            'user_id' => 'required|numeric',
+            'category_id' => 'required|numeric',
+            'description' => 'required|string',
+            'amount' => 'required|numeric',
+            'expense_at' => 'required|' . Rule::date()->format('Y-m-d'),
+        ]);
+
+        $expense->update($validated);
+
+        return redirect()->back()->with('message', 'Expense updated successfully!');
     }
 
     /**
@@ -74,6 +90,8 @@ class ExpenseController extends Controller
      */
     public function destroy(Expense $expense)
     {
-        //
+        $expense->delete();
+
+        return to_route('expenses.index')->with('message', 'Expense deleted successfully!');
     }
 }

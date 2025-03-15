@@ -14,6 +14,7 @@ import { format } from 'date-fns';
 import { CalendarIcon, Check, ChevronsUpDown } from 'lucide-react';
 import { FormEventHandler, useEffect, useState } from 'react';
 import { toast } from 'sonner';
+import { NewExpenseForm } from './new-expense';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -25,42 +26,41 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: '/expenses',
     },
     {
-        title: 'New Expense',
+        title: 'Update Expense',
         href: '#',
     },
 ];
 
-export type NewExpenseForm = {
-    user_id: number;
-    category_id: number;
-    description: string;
-    amount: number;
-    expense_at: string;
-};
+export type UpdateExpenseForm = {
+    id: number;
+} & NewExpenseForm;
 
-export default function NewExpense({ user_id, categories }: { user_id: number; categories: Category[] }) {
+export default function UpdateExpense({ user_id, categories, expense }: { user_id: number; categories: Category[]; expense: UpdateExpenseForm }) {
     const { flash } = usePage().props;
     const [date, setDate] = useState<Date>();
     const [open, setOpen] = useState(false);
     const [value, setValue] = useState('');
-    const { data, setData, post, processing, errors, reset, wasSuccessful } = useForm<Required<NewExpenseForm>>({
+    const { data, setData, put, processing, errors, reset, wasSuccessful } = useForm<Required<UpdateExpenseForm>>({
+        id: expense.id,
         user_id: user_id,
-        category_id: 0,
-        description: '',
-        amount: 0,
-        expense_at: '',
+        category_id: expense.category_id,
+        description: expense.description,
+        amount: expense.amount,
+        expense_at: expense.expense_at,
     });
 
     useEffect(() => {
+        setValue(categories.find((category) => category.id === expense.category_id)?.name ?? '');
+        setDate(new Date(expense.expense_at));
         wasSuccessful &&
             toast.success('Success', {
                 description: flash.message,
             });
-    }, [wasSuccessful]);
+    }, [wasSuccessful, expense]);
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-        post(route('expenses.store'), {
+        put(route('expenses.update', data.id), {
             onFinish: () => {
                 reset('user_id', 'category_id');
                 router.visit(route('expenses.index'));
@@ -70,9 +70,9 @@ export default function NewExpense({ user_id, categories }: { user_id: number; c
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="New Expense" />
+            <Head title="Update Expense" />
             <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
-                <h1 className="text-xl font-medium">New Expense</h1>
+                <h1 className="text-xl font-medium">Update Expense</h1>
                 <form className="flex max-w-xl flex-col gap-6" onSubmit={submit}>
                     <div className="grid gap-6">
                         <div className="grid gap-2">
@@ -173,7 +173,7 @@ export default function NewExpense({ user_id, categories }: { user_id: number; c
                         </div>
                     </div>
                     <Button type="submit" className="w-fit" disabled={processing}>
-                        {processing ? 'Saving...' : 'Save'}
+                        {processing ? 'Updating...' : 'Update'}
                     </Button>
                 </form>
             </div>

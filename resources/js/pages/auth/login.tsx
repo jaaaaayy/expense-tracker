@@ -1,6 +1,6 @@
 import { Head, useForm } from '@inertiajs/react';
 import { LoaderCircle } from 'lucide-react';
-import { FormEventHandler } from 'react';
+import { FormEventHandler, useEffect } from 'react';
 
 import InputError from '@/components/input-error';
 import TextLink from '@/components/text-link';
@@ -9,6 +9,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AuthLayout from '@/layouts/auth-layout';
+import { toast } from 'sonner';
 
 type LoginForm = {
     username: string;
@@ -22,11 +23,18 @@ interface LoginProps {
 }
 
 export default function Login({ status, canResetPassword }: LoginProps) {
-    const { data, setData, post, processing, errors, reset } = useForm<Required<LoginForm>>({
+    const { data, setData, post, processing, errors, reset, wasSuccessful } = useForm<Required<LoginForm>>({
         username: '',
         password: '',
         remember: false,
     });
+
+    useEffect(() => {
+        wasSuccessful &&
+            toast.success('Success', {
+                description: 'Logged in successfully.',
+            });
+    }, [wasSuccessful]);
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
