@@ -73,104 +73,99 @@ export default function NewExpense({ user_id, categories }: { user_id: number; c
             <Head title="New Expense" />
             <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
                 <h1 className="text-xl font-medium">New Expense</h1>
-                <form className="flex max-w-xl flex-col gap-6" onSubmit={submit}>
-                    <div className="grid gap-6">
-                        <div className="grid gap-2">
-                            <Label>Category</Label>
-                            <Popover open={open} onOpenChange={setOpen}>
-                                <PopoverTrigger asChild>
-                                    <Button variant="outline" role="combobox" aria-expanded={open} className="justify-between">
-                                        {value ? categories.find((category) => category.name === value)?.name : 'Select category...'}
-                                        <ChevronsUpDown className="opacity-50" />
-                                    </Button>
-                                </PopoverTrigger>
-                                <PopoverContent className="p-0">
-                                    <Command>
-                                        <CommandInput placeholder="Search category..." className="h-9" />
-                                        <CommandList>
-                                            <CommandEmpty>No category found.</CommandEmpty>
-                                            <CommandGroup>
-                                                {categories.map((category) => (
-                                                    <CommandItem
-                                                        key={category.id}
-                                                        value={category.name}
-                                                        onSelect={(currentValue) => {
-                                                            setData('category_id', category.id);
-                                                            setValue(currentValue === value ? '' : currentValue);
-                                                            setOpen(false);
-                                                        }}
-                                                    >
-                                                        {category.name}
-                                                        <Check className={cn('ml-auto', value === category.name ? 'opacity-100' : 'opacity-0')} />
-                                                    </CommandItem>
-                                                ))}
-                                            </CommandGroup>
-                                        </CommandList>
-                                    </Command>
-                                </PopoverContent>
-                            </Popover>
-                            <InputError message={errors.category_id} />
-                        </div>
+                <form className="grid max-w-xl gap-6" onSubmit={submit}>
+                    <div className="grid gap-2">
+                        <Label>Category</Label>
+                        <Popover open={open} onOpenChange={setOpen}>
+                            <PopoverTrigger asChild>
+                                <Button variant="outline" role="combobox" aria-expanded={open} className="justify-between">
+                                    {value ? categories.find((category) => category.name === value)?.name : 'Select category...'}
+                                    <ChevronsUpDown className="opacity-50" />
+                                </Button>
+                            </PopoverTrigger>
+                            <PopoverContent className="p-0">
+                                <Command>
+                                    <CommandInput placeholder="Search category..." className="h-9" />
+                                    <CommandList>
+                                        <CommandEmpty>No category found.</CommandEmpty>
+                                        <CommandGroup>
+                                            {categories.map((category) => (
+                                                <CommandItem
+                                                    key={category.id}
+                                                    value={category.name}
+                                                    onSelect={(currentValue) => {
+                                                        setData('category_id', category.id);
+                                                        setValue(currentValue === value ? '' : currentValue);
+                                                        setOpen(false);
+                                                    }}
+                                                >
+                                                    {category.name}
+                                                    <Check className={cn('ml-auto', value === category.name ? 'opacity-100' : 'opacity-0')} />
+                                                </CommandItem>
+                                            ))}
+                                        </CommandGroup>
+                                    </CommandList>
+                                </Command>
+                            </PopoverContent>
+                        </Popover>
+                        <InputError message={errors.category_id} />
+                    </div>
 
-                        <div className="grid gap-2">
-                            <Label htmlFor="description">Description</Label>
-                            <Textarea
-                                id="description"
-                                required
-                                autoFocus
-                                tabIndex={1}
-                                autoComplete="description"
-                                value={data.description}
-                                onChange={(e) => setData('description', e.target.value)}
-                                placeholder="Description"
-                                className="col-span-4"
-                            />
-                            <InputError message={errors.description} />
-                        </div>
+                    <div className="grid gap-2">
+                        <Label htmlFor="description">Description</Label>
+                        <Textarea
+                            id="description"
+                            required
+                            autoFocus
+                            tabIndex={1}
+                            autoComplete="description"
+                            value={data.description}
+                            onChange={(e) => setData('description', e.target.value)}
+                            placeholder="Description"
+                            className="col-span-4"
+                        />
+                        <InputError message={errors.description} />
+                    </div>
 
-                        <div className="grid gap-2">
-                            <Label htmlFor="amount">Amount</Label>
-                            <Input
-                                id="amount"
-                                type="number"
-                                required
-                                autoFocus
-                                tabIndex={1}
-                                autoComplete="amount"
-                                value={data.amount}
-                                onChange={(e) => setData('amount', parseFloat(e.target.value))}
-                                placeholder="Amount"
-                                className="col-span-4"
-                            />
-                            <InputError message={errors.amount} />
-                        </div>
+                    <div className="grid gap-2">
+                        <Label htmlFor="amount">Amount</Label>
+                        <Input
+                            id="amount"
+                            type="number"
+                            required
+                            autoFocus
+                            tabIndex={1}
+                            autoComplete="amount"
+                            value={data.amount}
+                            onChange={(e) => setData('amount', parseFloat(e.target.value))}
+                            placeholder="Amount"
+                            className="col-span-4"
+                        />
+                        <InputError message={errors.amount} />
+                    </div>
 
-                        <div className="grid gap-2">
-                            <Label htmlFor="amount">Expense At</Label>
-                            <Popover>
-                                <PopoverTrigger asChild>
-                                    <Button
-                                        variant={'outline'}
-                                        className={cn('justify-start text-left font-normal', !date && 'text-muted-foreground')}
-                                    >
-                                        <CalendarIcon className="mr-2 h-4 w-4" />
-                                        {date ? format(date, 'PPP') : <span>Pick a date</span>}
-                                    </Button>
-                                </PopoverTrigger>
-                                <PopoverContent className="w-auto p-0">
-                                    <Calendar
-                                        mode="single"
-                                        selected={date}
-                                        onSelect={(selectedDate) => {
-                                            setDate(selectedDate || undefined);
-                                            setData('expense_at', selectedDate ? selectedDate.toLocaleDateString('en-CA') : '');
-                                        }}
-                                        autoFocus
-                                    />
-                                </PopoverContent>
-                            </Popover>
-                            <InputError message={errors.expense_at} />
-                        </div>
+                    <div className="grid gap-2">
+                        <Label htmlFor="amount">Expense At</Label>
+                        <Popover>
+                            <PopoverTrigger asChild>
+                                <Button variant={'outline'} className={cn('justify-start text-left font-normal', !date && 'text-muted-foreground')}>
+                                    <CalendarIcon className="mr-2 h-4 w-4" />
+                                    {date ? format(date, 'PPP') : <span>Pick a date</span>}
+                                </Button>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-auto p-0">
+                                <Calendar
+                                    mode="single"
+                                    selected={date}
+                                    onSelect={(selectedDate) => {
+                                        setDate(selectedDate || undefined);
+                                        setData('expense_at', selectedDate ? selectedDate.toLocaleDateString('en-CA') : '');
+                                    }}
+                                    autoFocus
+                                />
+                            </PopoverContent>
+                        </Popover>
+                        <InputError message={errors.expense_at} />
                     </div>
                     <Button type="submit" className="w-fit" disabled={processing}>
                         {processing ? 'Saving...' : 'Save'}

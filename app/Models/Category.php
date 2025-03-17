@@ -20,10 +20,15 @@ class Category extends Model
         return $this->belongsTo(User::class);
     }
 
+    // public function expenses()
+    // {
+    //     return $this->belongsTo(User::class);
+    // }
     public function expenses()
     {
-        return $this->belongsTo(User::class);
+        return $this->hasMany(Expense::class);
     }
+
 
     protected function casts(): array
     {
