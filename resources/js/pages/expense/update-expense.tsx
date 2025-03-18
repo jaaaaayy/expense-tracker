@@ -8,7 +8,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Textarea } from '@/components/ui/textarea';
 import AppLayout from '@/layouts/app-layout';
 import { cn } from '@/lib/utils';
-import { BreadcrumbItem, Category } from '@/types';
+import { BreadcrumbItem, Category, Expense } from '@/types';
 import { Head, router, useForm, usePage } from '@inertiajs/react';
 import { format } from 'date-fns';
 import { CalendarIcon, Check, ChevronsUpDown } from 'lucide-react';
@@ -31,17 +31,14 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-export type UpdateExpenseForm = {
-    id: number;
-} & NewExpenseForm;
+export type UpdateExpenseForm = NewExpenseForm;
 
-export default function UpdateExpense({ user_id, categories, expense }: { user_id: number; categories: Category[]; expense: UpdateExpenseForm }) {
+export default function UpdateExpense({ user_id, categories, expense }: { user_id: number; categories: Category[]; expense: Expense }) {
     const { flash } = usePage().props;
     const [date, setDate] = useState<Date>();
     const [open, setOpen] = useState(false);
     const [value, setValue] = useState('');
     const { data, setData, put, processing, errors, reset, wasSuccessful } = useForm<Required<UpdateExpenseForm>>({
-        id: expense.id,
         user_id: user_id,
         category_id: expense.category_id,
         description: expense.description,
@@ -60,7 +57,7 @@ export default function UpdateExpense({ user_id, categories, expense }: { user_i
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-        put(route('expenses.update', data.id), {
+        put(route('expenses.update', expense.id), {
             onFinish: () => {
                 reset('user_id', 'category_id');
                 router.visit(route('expenses.index'));

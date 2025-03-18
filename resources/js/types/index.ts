@@ -43,13 +43,18 @@ export interface User {
 
 export interface Category {
     id: number;
+    user_id: number;
     name: string;
+    created_at: string;
+    updated_at: string;
 }
 
 export interface Expense {
     id: number;
     user: User;
+    user_id: number;
     category: Category;
+    category_id: number;
     description: string;
     amount: number;
     expense_at: string;

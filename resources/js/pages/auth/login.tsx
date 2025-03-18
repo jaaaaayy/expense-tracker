@@ -57,7 +57,7 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                             required
                             autoFocus
                             tabIndex={1}
-                            autoComplete="username"
+                            autoComplete="off"
                             value={data.username}
                             onChange={(e) => setData('username', e.target.value)}
                             placeholder="Username"
@@ -79,7 +79,7 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                             type="password"
                             required
                             tabIndex={2}
-                            autoComplete="current-password"
+                            autoComplete="off"
                             value={data.password}
                             onChange={(e) => setData('password', e.target.value)}
                             placeholder="Password"

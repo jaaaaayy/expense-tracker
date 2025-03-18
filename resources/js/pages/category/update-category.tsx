@@ -7,6 +7,7 @@ import { BreadcrumbItem, Category } from '@/types';
 import { Head, router, useForm, usePage } from '@inertiajs/react';
 import { FormEventHandler, useEffect } from 'react';
 import { toast } from 'sonner';
+import { NewCategoryForm } from './new-category';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -18,18 +19,18 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: '/categories',
     },
     {
-        title: 'New Category',
+        title: 'Update Category',
         href: '#',
     },
 ];
 
-export type NewCategoryForm = Pick<Category, 'user_id' | 'name'>;
+type UpdateCategoryForm = NewCategoryForm;
 
-export default function NewCategory({ user_id }: { user_id: number }) {
+export default function UpdateCategory({ user_id, category }: { user_id: number; category: Category }) {
     const { flash } = usePage().props;
-    const { data, setData, post, processing, errors, reset, wasSuccessful } = useForm<NewCategoryForm>({
+    const { data, setData, put, processing, errors, reset, wasSuccessful } = useForm<Required<UpdateCategoryForm>>({
         user_id: user_id,
-        name: '',
+        name: category.name,
     });
 
     useEffect(() => {
@@ -41,7 +42,7 @@ export default function NewCategory({ user_id }: { user_id: number }) {
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-        post(route('categories.store'), {
+        put(route('categories.update', category.id), {
             onFinish: () => {
                 reset();
                 router.visit(route('categories.index'));
@@ -51,9 +52,9 @@ export default function NewCategory({ user_id }: { user_id: number }) {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="New Category" />
+            <Head title="Update Category" />
             <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
-                <h1 className="text-xl font-medium">New Category</h1>
+                <h1 className="text-xl font-medium">Update Category</h1>
                 <form className="flex max-w-xl flex-col gap-6" onSubmit={submit}>
                     <div className="grid gap-2">
                         <Label htmlFor="name">Name</Label>

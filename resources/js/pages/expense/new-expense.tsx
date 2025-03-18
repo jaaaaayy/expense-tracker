@@ -8,7 +8,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Textarea } from '@/components/ui/textarea';
 import AppLayout from '@/layouts/app-layout';
 import { cn } from '@/lib/utils';
-import { BreadcrumbItem, Category } from '@/types';
+import { BreadcrumbItem, Category, Expense } from '@/types';
 import { Head, router, useForm, usePage } from '@inertiajs/react';
 import { format } from 'date-fns';
 import { CalendarIcon, Check, ChevronsUpDown } from 'lucide-react';
@@ -30,13 +30,7 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-export type NewExpenseForm = {
-    user_id: number;
-    category_id: number;
-    description: string;
-    amount: number;
-    expense_at: string;
-};
+export type NewExpenseForm = Pick<Expense, 'user_id' | 'category_id' | 'description' | 'amount' | 'expense_at'>;
 
 export default function NewExpense({ user_id, categories }: { user_id: number; categories: Category[] }) {
     const { flash } = usePage().props;
@@ -78,7 +72,7 @@ export default function NewExpense({ user_id, categories }: { user_id: number; c
                         <Label>Category</Label>
                         <Popover open={open} onOpenChange={setOpen}>
                             <PopoverTrigger asChild>
-                                <Button variant="outline" role="combobox" aria-expanded={open} className="justify-between">
+                                <Button variant="outline" role="combobox" aria-expanded={open} className="justify-between" autoFocus tabIndex={1}>
                                     {value ? categories.find((category) => category.name === value)?.name : 'Select category...'}
                                     <ChevronsUpDown className="opacity-50" />
                                 </Button>
@@ -116,9 +110,8 @@ export default function NewExpense({ user_id, categories }: { user_id: number; c
                         <Textarea
                             id="description"
                             required
-                            autoFocus
-                            tabIndex={1}
-                            autoComplete="description"
+                            tabIndex={2}
+                            autoComplete="off"
                             value={data.description}
                             onChange={(e) => setData('description', e.target.value)}
                             placeholder="Description"
@@ -133,9 +126,8 @@ export default function NewExpense({ user_id, categories }: { user_id: number; c
                             id="amount"
                             type="number"
                             required
-                            autoFocus
-                            tabIndex={1}
-                            autoComplete="amount"
+                            tabIndex={3}
+                            autoComplete="off"
                             value={data.amount}
                             onChange={(e) => setData('amount', parseFloat(e.target.value))}
                             placeholder="Amount"
@@ -148,7 +140,11 @@ export default function NewExpense({ user_id, categories }: { user_id: number; c
                         <Label htmlFor="amount">Expense At</Label>
                         <Popover>
                             <PopoverTrigger asChild>
-                                <Button variant={'outline'} className={cn('justify-start text-left font-normal', !date && 'text-muted-foreground')}>
+                                <Button
+                                    variant={'outline'}
+                                    className={cn('justify-start text-left font-normal', !date && 'text-muted-foreground')}
+                                    tabIndex={4}
+                                >
                                     <CalendarIcon className="mr-2 h-4 w-4" />
                                     {date ? format(date, 'PPP') : <span>Pick a date</span>}
                                 </Button>
@@ -167,7 +163,7 @@ export default function NewExpense({ user_id, categories }: { user_id: number; c
                         </Popover>
                         <InputError message={errors.expense_at} />
                     </div>
-                    <Button type="submit" className="w-fit" disabled={processing}>
+                    <Button type="submit" className="w-fit" disabled={processing} tabIndex={5}>
                         {processing ? 'Saving...' : 'Save'}
                     </Button>
                 </form>

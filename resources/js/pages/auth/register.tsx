@@ -56,7 +56,7 @@ export default function Register() {
                             required
                             autoFocus
                             tabIndex={1}
-                            autoComplete="first_name"
+                            autoComplete="off"
                             value={data.first_name}
                             onChange={(e) => setData('first_name', e.target.value)}
                             disabled={processing}
@@ -71,9 +71,8 @@ export default function Register() {
                             id="last_name"
                             type="text"
                             required
-                            autoFocus
-                            tabIndex={1}
-                            autoComplete="last_name"
+                            tabIndex={2}
+                            autoComplete="off"
                             value={data.last_name}
                             onChange={(e) => setData('last_name', e.target.value)}
                             disabled={processing}
@@ -88,8 +87,8 @@ export default function Register() {
                             id="username"
                             type="text"
                             required
-                            tabIndex={2}
-                            autoComplete="username"
+                            tabIndex={3}
+                            autoComplete="off"
                             value={data.username}
                             onChange={(e) => setData('username', e.target.value)}
                             disabled={processing}
@@ -104,8 +103,8 @@ export default function Register() {
                             id="email"
                             type="email"
                             required
-                            tabIndex={2}
-                            autoComplete="email"
+                            tabIndex={4}
+                            autoComplete="off"
                             value={data.email}
                             onChange={(e) => setData('email', e.target.value)}
                             disabled={processing}
@@ -120,8 +119,7 @@ export default function Register() {
                             id="password"
                             type="password"
                             required
-                            tabIndex={3}
-                            autoComplete="new-password"
+                            tabIndex={5}
                             value={data.password}
                             onChange={(e) => setData('password', e.target.value)}
                             disabled={processing}
@@ -136,8 +134,7 @@ export default function Register() {
                             id="password_confirmation"
                             type="password"
                             required
-                            tabIndex={4}
-                            autoComplete="new-password"
+                            tabIndex={6}
                             value={data.password_confirmation}
                             onChange={(e) => setData('password_confirmation', e.target.value)}
                             disabled={processing}
@@ -146,7 +143,7 @@ export default function Register() {
                         <InputError message={errors.password_confirmation} />
                     </div>
 
-                    <Button type="submit" className="mt-2 w-full" tabIndex={5} disabled={processing}>
+                    <Button type="submit" className="mt-2 w-full" tabIndex={6} disabled={processing}>
                         {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
                         Create account
                     </Button>
@@ -154,7 +151,7 @@ export default function Register() {
 
                 <div className="text-muted-foreground text-center text-sm">
                     Already have an account?{' '}
-                    <TextLink href={route('login')} tabIndex={6}>
+                    <TextLink href={route('login')} tabIndex={7}>
                         Log in
                     </TextLink>
                 </div>

@@ -23,7 +23,8 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        return Inertia::render('category/new-category');
+        $user_id = Auth::id();
+        return Inertia::render('category/new-category', ['user_id' => $user_id]);
     }
 
     /**
@@ -32,7 +33,8 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name' => 'required|string'
+            'user_id' => 'required|numeric',
+            'name' => 'required|string|max:50'
         ]);
 
         Category::create(attributes: $validated);
@@ -53,7 +55,7 @@ class CategoryController extends Controller
      */
     public function edit(Category $category)
     {
-        //
+        return Inertia::render('category/update-category', ['category' => $category]);
     }
 
     /**
@@ -61,7 +63,13 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
-        //
+        $validated = $request->validate([
+            'name' => 'required|string|max:50',
+        ]);
+
+        $category->update($validated);
+
+        return redirect()->back()->with('message', 'Category updated successfully!');
     }
 
     /**
@@ -69,6 +77,8 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-        //
+        $category->delete();
+
+        return to_route('categories.index')->with('message', 'Category deleted successfully!');
     }
 }

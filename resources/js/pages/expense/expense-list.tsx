@@ -30,7 +30,7 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-type DeleteExpenseForm = {
+export type DeleteExpenseForm = {
     id: number;
 };
 

@@ -1,5 +1,8 @@
 <?php
 
+use App\Models\Category;
+use App\Models\Expense;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -9,7 +12,10 @@ Route::get('/', function () {
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', function () {
-        return Inertia::render('dashboard');
+        $totalCategories = Category::where('user_id', Auth::id())->count();
+        $totalExpenses = Expense::where('user_id', Auth::id())->count();
+        $expenses = Expense::with(['user', 'category'])->where('user_id', Auth::id())->latest()->limit(10)->get();
+        return Inertia::render('dashboard', ['expenses' => $expenses, 'totalCategories' => $totalCategories, 'totalExpenses' => $totalExpenses]);
     })->name('dashboard');
 });
 
